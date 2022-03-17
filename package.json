@@ -4,7 +4,10 @@
   "description": "",
   "author": "",
   "license": "MIT",
-  "repository": "/discord-context",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emi-wtd/discord-context.git"
+  },
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
@@ -13,16 +16,13 @@
     "npm": ">=5"
   },
   "scripts": {
-    "test": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
     "build": "rollup -c",
-    "start": "rollup -c -w",
-    "prepare": "yarn run build",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
+    "start": "rollup -c -w"
   },
   "peerDependencies": {
-    "react": "^16.9.0"
+    "axios": "^0.26.1",
+    "next": "^12.1.0",
+    "react": "17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -55,16 +55,20 @@
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.0",
     "eslint-plugin-react": "^7.10.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-standard": "^3.1.0",
     "gh-pages": "^2.0.1",
-    "react": "^16.9.0",
+    "react": "17.0.2",
     "react-scripts": "^3.4.0",
-    "react-test-renderer": "^16.9.0",
+    "react-test-renderer": "17.0.2",
     "rollup": "^1.1.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-url": "^2.1.0"
+  },
+  "dependencies": {
+    "axios": "^0.26.1"
   }
 }

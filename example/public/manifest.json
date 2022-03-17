@@ -1,8 +1,0 @@
-{
-  "short_name": "discord-context",
-  "name": "discord-context",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
-}
