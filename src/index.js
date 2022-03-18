@@ -5,7 +5,6 @@ import {
   useEffect,
   useCallback,
 } from "react";
-// import axios from "axios";
 
 let context = createContext();
 let { Provider } = context;
