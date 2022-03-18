@@ -21,13 +21,17 @@ This package should be used on React / NextJS projects that requires an integrat
    ```js
    import { DiscordProvider } from "discord-context";
 
-   <DiscordProvider
-     redirectUri="{process.env.NEXT_PUBLIC_FRONT_URL}"
-     discordClientId="{process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}"
-     discordClientSecret="{process.env.NEXT_PUBLIC_DISCORD_CLIENT_SECRET}"
-   >
-     <Component {...pageProps} />
-   </DiscordProvider>;
+   function MyApp({ Component, pageProps }) {
+     <DiscordProvider
+       redirectUri="{process.env.NEXT_PUBLIC_FRONT_URL}"
+       discordClientId="{process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}"
+       discordClientSecret="{process.env.NEXT_PUBLIC_DISCORD_CLIENT_SECRET}"
+     >
+       <Component {...pageProps} />
+     </DiscordProvider>
+   }
+   
+   export default MyApp;
    ```
 
 3. Open your environment variables file (in our NextJs example is the `.env.local` located on the root folder of the project), and add three new variables: `NEXT_PUBLIC_FRONT_URL`, `NEXT_PUBLIC_DISCORD_CLIENT_ID`, `NEXT_PUBLIC_DISCORD_CLIENT_SECRET`
