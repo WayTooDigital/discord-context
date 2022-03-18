@@ -12,9 +12,7 @@ This package should be used on React / NextJS projects that requires an integrat
    ```
    Now you will see that your `package.json` file has a new record:
    ```json
-   ...
-   "discord-context": "https://github.com/emi-wtd/discord-context",
-   ...
+   "discord-context": "https://github.com/emi-wtd/discord-context"
    ```
 2. You have to wrap your app with a provider called `<DiscordProvider />`.
 
