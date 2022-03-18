@@ -1,6 +1,4 @@
-import { useContext, useState, useCallback, useEffect, createContext } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+import { useContext, useState, useEffect, useCallback, createContext } from 'react';
 import { jsx } from 'react/jsx-runtime';
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -124,8 +122,16 @@ var DiscordProvider = function DiscordProvider(_ref) {
       loadingDiscordUserData = _useState6[0],
       setLoadingDiscordUserData = _useState6[1];
 
-  var router = useRouter();
-  var code = router.query.code;
+  var _useState7 = useState(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      code = _useState8[0],
+      setCode = _useState8[1];
+
+  useEffect(function () {
+    var searchParams = new URLSearchParams(document.location.search);
+    var c = searchParams.get('code');
+    if (c !== null && c !== "") setCode(c);
+  }, []);
   var getUserFromDiscord = useCallback( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token_type, access_token) {
       var userResult;
@@ -136,17 +142,19 @@ var DiscordProvider = function DiscordProvider(_ref) {
               _context.prev = 0;
               setLoadingDiscordUserData(true);
               _context.next = 4;
-              return axios.get("https://discord.com/api/users/@me", {
+              return fetch("https://discord.com/api/users/@me", {
                 headers: {
                   Authorization: "".concat(token_type, " ").concat(access_token)
                 }
+              }).then(function (response) {
+                return response.json();
               });
 
             case 4:
               userResult = _context.sent;
               setLoadingDiscordUserData(false);
-              setDiscordUser(userResult.data);
-              return _context.abrupt("return", userResult.data);
+              setDiscordUser(userResult);
+              return _context.abrupt("return", userResult);
 
             case 10:
               _context.prev = 10;
@@ -179,19 +187,24 @@ var DiscordProvider = function DiscordProvider(_ref) {
           case 0:
             _context2.prev = 0;
             _context2.next = 3;
-            return axios.post("https://discord.com/api/oauth2/token", new URLSearchParams({
-              client_id: discordClientId,
-              client_secret: discordClientSecret,
-              code: code,
-              grant_type: "authorization_code",
-              redirect_uri: redirectUri,
-              scope: "identify"
-            }));
+            return fetch("https://discord.com/api/oauth2/token", {
+              method: "POST",
+              body: new URLSearchParams({
+                client_id: discordClientId,
+                client_secret: discordClientSecret,
+                code: code,
+                grant_type: "authorization_code",
+                redirect_uri: redirectUri,
+                scope: "identify"
+              })
+            }).then(function (response) {
+              return response.json();
+            });
 
           case 3:
             oauthResult = _context2.sent;
-            setOauthData(oauthResult.data);
-            return _context2.abrupt("return", oauthResult.data);
+            setOauthData(oauthResult);
+            return _context2.abrupt("return", oauthResult);
 
           case 8:
             _context2.prev = 8;
@@ -207,7 +220,7 @@ var DiscordProvider = function DiscordProvider(_ref) {
   })), [code]);
 
   var loginWithDiscord = function loginWithDiscord() {
-    router.push("https://discord.com/api/oauth2/authorize?".concat(new URLSearchParams({
+    window.location.replace("https://discord.com/api/oauth2/authorize?".concat(new URLSearchParams({
       client_id: discordClientId,
       redirect_uri: redirectUri,
       response_type: "code",
@@ -255,7 +268,7 @@ var DiscordProvider = function DiscordProvider(_ref) {
     }();
 
     if (code) getData();
-  }, [code, router, getTokenFromDiscord, getUserFromDiscord]);
+  }, [code, getTokenFromDiscord, getUserFromDiscord]);
   return /*#__PURE__*/jsx(Provider, {
     value: {
       loginWithDiscord: loginWithDiscord,

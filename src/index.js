@@ -5,8 +5,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
+// import axios from "axios";
 
 let context = createContext();
 let { Provider } = context;
@@ -18,20 +17,25 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
   const [discordUser, setDiscordUser] = useState(null);
   const [oauthData, setOauthData] = useState(null);
   const [loadingDiscordUserData, setLoadingDiscordUserData] = useState(false);
-  const router = useRouter();
-  const code = router.query.code;
+  const [code, setCode] = useState(null);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(document.location.search);
+    const c = searchParams.get('code');
+    if (c !== null && c !== "") setCode(c);
+  }, []);
 
   const getUserFromDiscord = useCallback(async (token_type, access_token) => {
     try {
       setLoadingDiscordUserData(true);
-      const userResult = await axios.get("https://discord.com/api/users/@me", {
+      const userResult = await fetch("https://discord.com/api/users/@me", {
         headers: {
           Authorization: `${token_type} ${access_token}`,
         },
-      });
+      }).then(response => response.json());
       setLoadingDiscordUserData(false);
-      setDiscordUser(userResult.data);
-      return userResult.data;
+      setDiscordUser(userResult);
+      return userResult;
     } catch (e) {
       setLoadingDiscordUserData(false);
       throw e;
@@ -44,9 +48,9 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
 
   const getTokenFromDiscord = useCallback(async () => {
     try {
-      const oauthResult = await axios.post(
-        "https://discord.com/api/oauth2/token",
-        new URLSearchParams({
+      const oauthResult = await fetch("https://discord.com/api/oauth2/token", {
+        method: "POST",
+        body: new URLSearchParams({
           client_id: discordClientId,
           client_secret: discordClientSecret,
           code: code,
@@ -54,17 +58,17 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
           redirect_uri: redirectUri,
           scope: "identify",
         })
-      );
+      }).then(response => response.json());
 
-      setOauthData(oauthResult.data);
-      return oauthResult.data;
+      setOauthData(oauthResult);
+      return oauthResult;
     } catch (e) {
       throw e;
     }
   }, [code]);
 
   const loginWithDiscord = () => {
-    router.push(
+    window.location.replace(
       `https://discord.com/api/oauth2/authorize?${new URLSearchParams({
         client_id: discordClientId,
         redirect_uri: redirectUri,
@@ -83,7 +87,7 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
     };
 
     if (code) getData();
-  }, [code, router, getTokenFromDiscord, getUserFromDiscord]);
+  }, [code, getTokenFromDiscord, getUserFromDiscord]);
 
   return (
     <Provider
