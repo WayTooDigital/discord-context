@@ -41,9 +41,9 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
     }
   }, []);
 
-  const clearUserState = () => {
+  const clearUserState = useCallback(() => {
     setDiscordUser(null);
-  };
+  });
 
   const getTokenFromDiscord = useCallback(async () => {
     try {

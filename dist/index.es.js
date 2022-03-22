@@ -174,11 +174,9 @@ var DiscordProvider = function DiscordProvider(_ref) {
       return _ref2.apply(this, arguments);
     };
   }(), []);
-
-  var clearUserState = function clearUserState() {
+  var clearUserState = useCallback(function () {
     setDiscordUser(null);
-  };
-
+  });
   var getTokenFromDiscord = useCallback( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
     var oauthResult;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {

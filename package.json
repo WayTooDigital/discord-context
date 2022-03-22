@@ -1,6 +1,6 @@
 {
   "name": "discord-context",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This package should be used on React / NextJS projects that requires an integration with Discord.",
   "author": "Emilio Arcioni (WayTooDigital)",
   "license": "MIT",
