@@ -134,7 +134,7 @@ var DiscordProvider = function DiscordProvider(_ref) {
   }, []);
   var getUserFromDiscord = useCallback( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token_type, access_token) {
-      var userResult;
+      var response, userResult;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -146,28 +146,41 @@ var DiscordProvider = function DiscordProvider(_ref) {
                 headers: {
                   Authorization: "".concat(token_type, " ").concat(access_token)
                 }
-              }).then(function (response) {
-                return response.json();
               });
 
             case 4:
+              response = _context.sent;
+
+              if (!(response.status === 200)) {
+                _context.next = 12;
+                break;
+              }
+
+              _context.next = 8;
+              return response.json();
+
+            case 8:
               userResult = _context.sent;
               setLoadingDiscordUserData(false);
               setDiscordUser(userResult);
               return _context.abrupt("return", userResult);
 
-            case 10:
-              _context.prev = 10;
+            case 12:
+              _context.next = 18;
+              break;
+
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
               setLoadingDiscordUserData(false);
               throw _context.t0;
 
-            case 14:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 10]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function (_x, _x2) {
@@ -216,6 +229,52 @@ var DiscordProvider = function DiscordProvider(_ref) {
       }
     }, _callee2, null, [[0, 8]]);
   })), [code]);
+  var refreshTokenFromDiscord = useCallback( /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(refresh_token) {
+      var oauthResult;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return fetch("https://discord.com/api/oauth2/token", {
+                method: "POST",
+                body: new URLSearchParams({
+                  client_id: discordClientId,
+                  client_secret: discordClientSecret,
+                  grant_type: "refresh_token",
+                  refresh_token: refresh_token
+                }),
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
+              }).then(function (response) {
+                return response.json();
+              });
+
+            case 3:
+              oauthResult = _context3.sent;
+              setOauthData(oauthResult);
+              return _context3.abrupt("return", oauthResult);
+
+            case 8:
+              _context3.prev = 8;
+              _context3.t0 = _context3["catch"](0);
+              throw _context3.t0;
+
+            case 11:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 8]]);
+    }));
+
+    return function (_x3) {
+      return _ref4.apply(this, arguments);
+    };
+  }(), []);
 
   var loginWithDiscord = function loginWithDiscord() {
     window.location.replace("https://discord.com/api/oauth2/authorize?".concat(new URLSearchParams({
@@ -228,40 +287,40 @@ var DiscordProvider = function DiscordProvider(_ref) {
 
   useEffect(function () {
     var getData = /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
         var _oauthData;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context3.prev = 0;
-                _context3.next = 3;
+                _context4.prev = 0;
+                _context4.next = 3;
                 return getTokenFromDiscord();
 
               case 3:
-                _oauthData = _context3.sent;
-                _context3.next = 6;
+                _oauthData = _context4.sent;
+                _context4.next = 6;
                 return getUserFromDiscord(_oauthData.token_type, _oauthData.access_token);
 
               case 6:
-                _context3.next = 10;
+                _context4.next = 10;
                 break;
 
               case 8:
-                _context3.prev = 8;
-                _context3.t0 = _context3["catch"](0);
+                _context4.prev = 8;
+                _context4.t0 = _context4["catch"](0);
 
               case 10:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, null, [[0, 8]]);
+        }, _callee4, null, [[0, 8]]);
       }));
 
       return function getData() {
-        return _ref4.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       };
     }();
 
@@ -274,7 +333,8 @@ var DiscordProvider = function DiscordProvider(_ref) {
       clearUserState: clearUserState,
       oauthData: oauthData,
       loadingDiscordUserData: loadingDiscordUserData,
-      getUserFromDiscord: getUserFromDiscord
+      getUserFromDiscord: getUserFromDiscord,
+      refreshTokenFromDiscord: refreshTokenFromDiscord
     },
     children: children
   });

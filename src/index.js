@@ -27,14 +27,17 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
   const getUserFromDiscord = useCallback(async (token_type, access_token) => {
     try {
       setLoadingDiscordUserData(true);
-      const userResult = await fetch("https://discord.com/api/users/@me", {
+      const response = await fetch("https://discord.com/api/users/@me", {
         headers: {
           Authorization: `${token_type} ${access_token}`,
         },
-      }).then(response => response.json());
-      setLoadingDiscordUserData(false);
-      setDiscordUser(userResult);
-      return userResult;
+      });
+      if (response.status === 200) {
+        const userResult = await response.json();
+        setLoadingDiscordUserData(false);
+        setDiscordUser(userResult);
+        return userResult;
+      }
     } catch (e) {
       setLoadingDiscordUserData(false);
       throw e;
@@ -65,6 +68,29 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
       throw e;
     }
   }, [code]);
+
+  const refreshTokenFromDiscord = useCallback(async (refresh_token) => {
+    try {
+      const oauthResult = await fetch("https://discord.com/api/oauth2/token", {
+        method: "POST",
+        body: new URLSearchParams({
+          client_id: discordClientId,
+          client_secret: discordClientSecret,
+          grant_type: "refresh_token",
+          refresh_token: refresh_token,
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(response => response.json());
+
+      setOauthData(oauthResult);
+
+      return oauthResult;
+    } catch (err) {
+      throw err;
+    }
+  }, []);
 
   const loginWithDiscord = () => {
     window.location.replace(
@@ -97,6 +123,7 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
         oauthData,
         loadingDiscordUserData,
         getUserFromDiscord,
+        refreshTokenFromDiscord,
       }}
     >
       {children}
