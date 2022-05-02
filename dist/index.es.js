@@ -152,7 +152,7 @@ var DiscordProvider = function DiscordProvider(_ref) {
               response = _context.sent;
 
               if (!(response.status === 200)) {
-                _context.next = 12;
+                _context.next = 14;
                 break;
               }
 
@@ -165,22 +165,27 @@ var DiscordProvider = function DiscordProvider(_ref) {
               setDiscordUser(userResult);
               return _context.abrupt("return", userResult);
 
-            case 12:
-              _context.next = 18;
+            case 14:
+              if (response.status === 401) {
+                setLoadingDiscordUserData(false);
+              }
+
+            case 15:
+              _context.next = 21;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](0);
               setLoadingDiscordUserData(false);
               throw _context.t0;
 
-            case 18:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
+      }, _callee, null, [[0, 17]]);
     }));
 
     return function (_x, _x2) {

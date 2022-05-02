@@ -37,6 +37,8 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
         setLoadingDiscordUserData(false);
         setDiscordUser(userResult);
         return userResult;
+      } else if (response.status === 401) {
+        setLoadingDiscordUserData(false);
       }
     } catch (e) {
       setLoadingDiscordUserData(false);
