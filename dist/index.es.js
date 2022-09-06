@@ -1,6 +1,16 @@
 import { useContext, useState, useEffect, useCallback, createContext } from 'react';
 import { jsx } from 'react/jsx-runtime';
 
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
+}
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -281,8 +291,11 @@ var DiscordProvider = function DiscordProvider(_ref) {
     };
   }(), []);
 
-  var loginWithDiscord = function loginWithDiscord() {
-    var scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "identify email guilds.join";
+  var loginWithDiscord = function loginWithDiscord(scope) {
+    if (!scope || _typeof(scope) === "object") {
+      scope = "identify email guilds.join";
+    }
+
     window.location.replace("https://discord.com/api/oauth2/authorize?".concat(new URLSearchParams({
       client_id: discordClientId,
       redirect_uri: redirectUri,
