@@ -94,13 +94,13 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
     }
   }, []);
 
-  const loginWithDiscord = () => {
+  const loginWithDiscord = (scope = "identify email guilds.join") => {
     window.location.replace(
       `https://discord.com/api/oauth2/authorize?${new URLSearchParams({
         client_id: discordClientId,
         redirect_uri: redirectUri,
         response_type: "code",
-        scope: "identify email guilds.join",
+        scope,
       }).toString()}`
     );
   };

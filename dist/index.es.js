@@ -282,11 +282,12 @@ var DiscordProvider = function DiscordProvider(_ref) {
   }(), []);
 
   var loginWithDiscord = function loginWithDiscord() {
+    var scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "identify email guilds.join";
     window.location.replace("https://discord.com/api/oauth2/authorize?".concat(new URLSearchParams({
       client_id: discordClientId,
       redirect_uri: redirectUri,
       response_type: "code",
-      scope: "identify email guilds.join"
+      scope: scope
     }).toString()));
   };
 
