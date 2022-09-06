@@ -94,7 +94,10 @@ export const DiscordProvider = ({ redirectUri, discordClientId, discordClientSec
     }
   }, []);
 
-  const loginWithDiscord = (scope = "identify email guilds.join") => {
+  const loginWithDiscord = (scope) => {
+    if (!scope || typeof scope === "object") {
+      scope = "identify email guilds.join";
+    }
     window.location.replace(
       `https://discord.com/api/oauth2/authorize?${new URLSearchParams({
         client_id: discordClientId,
